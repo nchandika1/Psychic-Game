@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Naga's Psychic Game</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+</head>
+<body>
+	<h1>The Psychic Game</h1>
+
+	<h3>Guess what letter I'm thinking of</h3>
+	<h3>Wins: <span id="win-text">0</span></h3>
+	<h3>Losses: <span id="losses-text">0</span></h3>
+	<h3>Guesses Left: <span id="guesses-left-text">9</span></h3>
+	<h3>Your Guesses so far: <span id="guesses-so-far-text"></span><h3>
+	
+	<script type="text/javascript">
+
+		// Function to generate random character for computer's choice
+		function randChar() {
+			var randomNum;
+			var randChar;
+
+			// Character String to use for computer guess
+			var chars = 'abcdefghijklmnopqrstuvwxyz';
+
+			// Get random character
+			randomNum = Math.floor(Math.random()*chars.length);
+			console.log("Random Number: " + randomNum);
+			randomChar = chars.charAt(randomNum);
+			console.log("Random Character: " + randomChar);
+			return randomChar;
+		}
+
+		//Get computer's random character
+		var computerChoice = randChar();
+		console.log("Computer's choice: " + computerChoice);
+
+		// Initialize few more variables
+		var wins = 0;
+		var losses = 0;
+		var displayStr = "";
+		var guessesLeft = 9;
+
+		// Get the elements to write on
+		var winCount = document.getElementById("win-text");
+		var lossCount = document.getElementById("losses-text");
+		var guessesLeftCount = document.getElementById("guesses-left-text");
+		var guessesSoFarString = document.getElementById("guesses-so-far-text");
+
+		// Main function
+		document.onkeyup = function(event) {
+			var input = event.key;
+			
+			console.log("key is: "+input);
+			var input = input.toLowerCase();
+
+			console.log("Key is " + input);
+
+			if (input=="meta") {
+				return;
+			}
+			
+			var newGame = false;
+			if (input === computerChoice) {
+				// Correct guess, increment wins counter!
+				wins++;
+				newGame = true;
+			} else {
+				//Incorect guess, increment guesses left and eventually loss counter if 9 guesses are used
+				guessesLeft--;
+				if (guessesLeft == 0) {
+					// Reached the guess limit of 9, record a loss
+					losses++;
+					newGame = true;
+				} else {
+					newGame = false;
+					if (displayStr.length != 0) {
+						displayStr = displayStr + ", " + input;
+					} else {
+						displayStr = input;
+					}
+				}
+			}
+
+			if (newGame) {
+				// Reset variables
+				guessesLeft = 9;
+				displayStr = "";
+
+				//Get another char from the computer
+				computerChoice = randChar();
+				console.log("Computer's choice: " + computerChoice);
+			}
+			
+			console.log("Wins: " + wins + " Losses: " + losses);
+			console.log("Guesses Left: " + guessesLeft + " Guesses so far: " + displayStr);
+
+			// Write it out 
+			winCount.textContent = wins;
+			lossCount.textContent = losses;
+			guessesLeftCount.textContent = guessesLeft;
+			guessesSoFarString.textContent = displayStr;
+
+		} // onkeyup
+	</script>
+</body>
+</html>
